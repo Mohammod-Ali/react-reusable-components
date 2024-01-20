@@ -4,8 +4,9 @@ const NormalForm = () => {
 
     const { register, handleSubmit } = useForm();
 
-    const onSubmit = (data) => {
-        console.log(data)
+    const onSubmit = (e) => {
+        e.preventDefault()
+        console.log(e)
     }
   
     return (
@@ -21,6 +22,14 @@ const NormalForm = () => {
             <div>
                 <label className='block' htmlFor="password">Password </label>
                 <input type="password" id="password" {...register('password')} />
+            </div>
+            <div>
+                <label className='block' htmlFor="textarea">Textarea </label>
+                <input type="textarea" id="textarea" {...register('textarea')} />
+            </div>
+            <div>
+                <label className='block' htmlFor="checkbox">Checkbox </label>
+                <input type="checkbox" id="checkbox" {...register('checkbox')} />
             </div>
             
             <select name="" id="">
