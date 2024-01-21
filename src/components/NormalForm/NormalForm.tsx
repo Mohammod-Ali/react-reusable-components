@@ -1,39 +1,46 @@
-import { useForm } from 'react-hook-form';
+import { FieldValues, FormProvider, useForm } from 'react-hook-form';
 import Button from '../ui/Button';
-import {z} form 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { SignUpSchema, TNormalForm } from './validation';
+import InputField from './InputField';
 
 
-const SignUpSchema = z.object({
-    name: z.string(),
-    email: z.string().email(),
-    password: z.string().min(8 ,'Too sort. Provide minimum 8 character.'),
-})
 
 const NormalForm = () => {
 
-    const { register, handleSubmit, formState: {errors} } = useForm();
+    const methods = useForm<TNormalForm>({
+        resolver: zodResolver(SignUpSchema)
+    });
 
-    const onSubmit = (data) => {
+    const {
+         register, 
+         handleSubmit, 
+         watch,
+         formState: {errors} 
+    } = methods
+
+    console.log(watch('name'))
+
+    const onSubmit = (data : FieldValues) => {
         // e.preventDefault()
         console.log(data)
     }
   
     return (
+        <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
             <div>
-                <label className='block' htmlFor="name">Name </label>
-                <input type="text" id="name" {...register('name', {required: true})} />
-                {errors.name && <span className='text-xs text-red-500'>This field is required.</span>}
+               <InputField ></InputField>
             </div>
             <div>
                 <label className='block' htmlFor="email">Email </label>
                 <input type="email" id="email" {...register('email', {required: true})} />
-                {errors.email && <span className='text-xs text-red-500'>This field is required.</span>}
+                {errors.email && <span className='text-xs text-red-500'>{errors.email?.message}</span>}
             </div>
             <div>
                 <label className='block' htmlFor="password">Password </label>
                 <input type="password" id="password" {...register('password', {minLength: 8})} />
-                {errors.password && <span className='text-xs text-red-500'>Too sort. type minimum 8 character.</span>}
+                {errors.password && <span className='text-xs text-red-500'>{errors.password.message}</span>}
             </div>
             {/* <div>
                 <label className='block' htmlFor="textarea">Textarea </label>
@@ -54,6 +61,7 @@ const NormalForm = () => {
             <Button type='submit'>Submit</Button>
             </div>
         </form>
+        </FormProvider>
     );
 };
 
